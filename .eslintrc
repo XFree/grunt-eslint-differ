@@ -1,25 +1,10 @@
 {
-  "plugins": [
-    "jasmine"
-  ],
   "parserOptions": {
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true
     }
   },
   "rules": {
-    // Для jasmine plugin
-    "jasmine/named-spy": 0,
-    // xdescribe, xit
-    "jasmine/no-disabled-tests": 2,
-    // fdescribe, fit
-    "jasmine/no-focused-tests": 2,
-    "jasmine/no-suite-dupes": 0,
-    "jasmine/no-spec-dupes": 0,
-    "jasmine/missing-expect": 0,
-    "jasmine/no-suite-callback-args": 0,
-    "jasmine/valid-expect": 0,
-    "jasmine/no-assign-spyon": 0,
     // Запрет на присваивание внутри конструкций if: if (x = 0)
     "no-cond-assign": "error",
     // Запрет на использование console.log
@@ -282,19 +267,19 @@
     "wrap-iife": 0,
     // Настройка отступов
     "indent": [
-        "warn",
-        2,
-        {
-          "VariableDeclarator": {
-            // 4 для var
-            "var": 2,
-            // 4 для let
-            "let": 2,
-            // 6 для const
-            "const": 3
-          },
-          "SwitchCase": 1
-        }
+      "warn",
+      2,
+      {
+        "VariableDeclarator": {
+          // 4 для var
+          "var": 2,
+          // 4 для let
+          "let": 2,
+          // 6 для const
+          "const": 3
+        },
+        "SwitchCase": 1
+      }
     ],
     // Требование писать jsDoc, если объявляется функция/метод
     "require-jsdoc": [
