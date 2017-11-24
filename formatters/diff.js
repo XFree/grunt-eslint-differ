@@ -1,10 +1,9 @@
-/* eslint-env es6*/
-const differ = require('./lib/differ');
+const differ = require('../lib/differ');
 
-module.exports = (results) => {
+module.exports = (results, diffResult) => {
   const path = require('path'),
         diffFilePath = process.env.ESLINT_DIFF_FILE && process.env.ESLINT_DIFF_FILE.trim(),
-        diffFiles = diffFilePath ? require(path.resolve(diffFilePath)) : null,
+        diffFiles = !diffResult && diffFilePath ? require(path.resolve(diffFilePath)) : diffResult,
         {CLIEngine} = require('eslint'),
         htmlFormatter = CLIEngine.getFormatter(process.env.ESLINT_DIFF_FORMATER);
 

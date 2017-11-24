@@ -1,6 +1,6 @@
 {
-  "name": "eslint-diff-formtter",
-  "version": "0.1.0",
+  "name": "grunt-eslint-differ",
+  "version": "0.1.3",
   "description": "eslint diff formatter",
   "main": "eslint-diff-formatter.js",
   "scripts": {
@@ -11,12 +11,14 @@
   },
   "keywords": [
     "eslint",
-    "formatters",
+    "formatter",
     "diff"
   ],
   "author": "dmirtiy.xfree@narod.ru",
   "license": "ISC",
-  "devDependencies": {
-    "eslint": "^4.11.0"
+  "dependencies": {
+    "base64url": "^2.0.0",
+    "eslint": "^4.11.0",
+    "node-fetch": "^1.7.3"
   }
 }
