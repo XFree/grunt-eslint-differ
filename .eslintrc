@@ -1,0 +1,310 @@
+{
+  "plugins": [
+    "jasmine"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "rules": {
+    // Для jasmine plugin
+    "jasmine/named-spy": 0,
+    // xdescribe, xit
+    "jasmine/no-disabled-tests": 2,
+    // fdescribe, fit
+    "jasmine/no-focused-tests": 2,
+    "jasmine/no-suite-dupes": 0,
+    "jasmine/no-spec-dupes": 0,
+    "jasmine/missing-expect": 0,
+    "jasmine/no-suite-callback-args": 0,
+    "jasmine/valid-expect": 0,
+    "jasmine/no-assign-spyon": 0,
+    // Запрет на присваивание внутри конструкций if: if (x = 0)
+    "no-cond-assign": "error",
+    // Запрет на использование console.log
+    "no-console": 0,
+    // Добавляет точку с запятой (AUTOFIX)
+    "semi": [
+      "error",
+      "always",
+      {
+        "omitLastInOneLineBlock": true
+      }
+    ],
+    // Запрет на использование констант в if, while, do
+    "no-constant-condition": "error",
+    // Запрет на использование спец символов в регулярках
+    "no-control-regex": 0,
+    // Запрет на использование debugger
+    "no-debugger": "error",
+    // Запрет на одинаковые имена параметров у функций
+    "no-dupe-args": "error",
+    // Запрет на одинаковые имена у свойств объектов
+    "no-dupe-keys": "error",
+    // Запрет на одинаковые значения case в операторе switch
+    "no-duplicate-case": "error",
+    // Запрет на пустые блоки (без кода между фигурными скобками)
+    "no-empty": "error",
+    // Запрет на повторяющуюся точку с запятой: ;;
+    "no-extra-semi": "error",
+    // Запрет на создание переменных с таким же названием как и уже у существующих функций
+    "no-func-assign": "error",
+    // Запрет на объявление функций внутри функций
+    "no-inner-declarations": "error",
+    // Запрет на создание локальных объектов глобальных классов, например: var math = Math();
+    "no-obj-calls": "error",
+    // Запрет на действия, которые заведомо не выполнятся после операторов return, throw, break
+    "no-unreachable": "error",
+    // Требование использовать isNaN(foo) вместо foo == NaN
+    "use-isnan": "error",
+    // Запрет на присваивание переменной-ошибки в try-catch выражениях
+    "no-ex-assign": "error",
+    // Запрет на использование некорректных регулярок
+    "no-invalid-regexp": "error",
+    // Запрет множественных пробелов в регулярных выражениях
+    "no-regex-spaces": "error",
+    // Запрет на использование массивов с пустыми значениями: var colors = [ "red",, "blue" ];
+    "no-sparse-arrays": "error",
+    // disallow control flow statements in finally blocks (?)
+    "no-unsafe-finally": 0,
+    // JSDOC описание должно быть верным: все параметры присутствуют, нет опечаток в типах
+    "valid-jsdoc": [
+      "error",
+      {
+        "requireReturn": false
+      }
+    ],
+    "key-spacing": 0,
+    // Запрет на опечатки в названиях стандартных типов, например string, undefined, function
+    "valid-typeof": "error",
+    // Требование объявлять переменные вне операторов и циклов
+    "block-scoped-var": "error",
+    // Требование обязательно использовать {}
+    "curly": "error",
+    // Требование использовать default в конструкции switch
+    "default-case": "error",
+    // При переносе на другую строку точка должна быть на следующей строке
+    "dot-location": [
+      "error",
+      "property"
+    ],
+    // Требование использовать foo.bar или foo[bar] вместо foo["bar"]
+    "dot-notation": "error",
+    // Требование использовать === and !== вместо == и !=
+    "eqeqeq": [
+      "error",
+      "always"
+    ],
+    // В конструкции if не использовать else { return x; }, а выносить return из оператора
+    "no-else-return": "error",
+    // Запрет на пустые функции
+    "no-empty-function": "error",
+    // Требование использовать foo === null вместо foo == null
+    "no-eq-null": "error",
+    // Запрет объявления функций внутри цикла -- требуется исправление в подсистеме
+    "no-loop-func": "warn",
+    // Запрет переноса строки при помощи косой
+    "no-multi-str": "error",
+    // Запрет операции присваивания в операторе return  return result += postfix;
+    "no-return-assign": "error",
+    // Запрет присваивания самого себя например a = a;
+    "no-self-assign": "error",
+    // Запрет сравнивания с самим собой 1 === 1
+    "no-self-compare": "error",
+    // Запрет использования throw c литералами
+    "no-throw-literal": "error",
+    // Внутри цикла управляющая переменная должна меняться
+    "no-unmodified-loop-condition": "error",
+    // Запрет неиспользуемых ярлыков
+    "no-unused-labels": "error",
+    // Запрет вызова функции через call или apply, не передавая при этом контекста, вместо обычного вызова
+    "no-useless-call": "error",
+    // Запрет конкатенации литералов, кроме многострочных
+    "no-useless-concat": "error",
+    // Отключает использование void
+    "no-void": "error",
+    // Отключает оператор with
+    "no-with": "error",
+    // Требования объявления переменных только в самом начале блока
+    "vars-on-top": "error",
+    // Требование ставить сначала переменную, а потом литерал в сравнении ("red" === color будет ошибочно)
+    "yoda": "error",
+    // Требование ставить пробелы перед и после фигурных скобок
+    "block-spacing": "error",
+    // Требование не переносить фигурные скобки
+    "brace-style": "error",
+    // Требование называть функции через camelCase, не строгое
+    "camelcase": "warn",
+    // Требование не ставить запятую, если перечисление закончилось
+    "comma-dangle": "error",
+    // Требование ставить пробел после запятой и не ставить после
+    "comma-spacing": [
+      "error",
+      {
+        "before": false,
+        "after": true
+      }
+    ],
+    // Требование не ставить запятую на отдельной строке и не переносить на строку ниже
+    "comma-style": "error",
+    // Требование не ставить лишних пробелов
+    "computed-property-spacing": "error",
+    // Требование вызывать функцию без пробела между именем функции и её параметрами
+    "func-call-spacing": "error",
+    // Требование ставить пробелы до и после ключевых слов
+    "keyword-spacing": [
+      "error",
+      {
+        "before": true
+      }
+    ],
+    // Требование не ставить комментарии справа от кода
+    "line-comment-position": [
+      "warn",
+      {
+        "position": "above"
+      }
+    ],
+    // Требование ставить пустую строку после объявления переменных
+    "newline-after-var": [
+      "error",
+      "always"
+    ],
+    // Требование не ставить комментарии справа
+    "no-inline-comments": "warn",
+    // Требование не ставить несколько пустых строк подряд
+    "no-multiple-empty-lines": "error",
+    // Требование не ставить пробел после объекта
+    "no-whitespace-before-property": "error",
+    // Требование переводить строку для новых полей объекта
+    "object-property-newline": [
+      "error",
+      {
+        "allowMultiplePropertiesPerLine": true
+      }
+    ],
+    // Требование переводить строку при перечислении объявляемых переменных и инициализации
+    "one-var-declaration-per-line": [
+      "error",
+      "initializations"
+    ],
+    // Требование ставить только один var для объявления переменных
+    "one-var": [
+      "error",
+      "always"
+    ],
+    // Требование при переносе строки оставлять оператор справа на предыдущей строчке
+    "operator-linebreak": [
+      "warn",
+      "after"
+    ],
+    // Требование ставить одинарные кавычки
+    "quotes": [
+      "warn",
+      "single"
+    ],
+    // Требование не переопределять стандартные переменные
+    "no-native-reassign": "error",
+    // enforce getter and setter pairs in objects (?)
+    "accessor-pairs": 0,
+    // enforce return statements in callbacks of array methods (?)
+    "array-callback-return": 0,
+    // Ограничение максимальной сложности программы
+    "complexity": 0,
+    // require for-in loops to include an if statement (?)
+    "guard-for-in": 0,
+    // Запрет на алёрты
+    "no-alert": 0,
+    // Запрет на callee
+    "no-caller": 0,
+    // Требование проставлять фигурные скобки в switch
+    "no-case-declarations": 0,
+    // disallow division operators explicitly at the beginning of regular expressions (?)
+    "no-div-regex": 0,
+    // Запрет на пустые паттерны, например: var {} = foo;, нужно var {a = {}} = foo;
+    "no-empty-pattern": "error",
+    // Запрет на eval()
+    "no-eval": 0,
+    // Запрет на расширение стандартных типов
+    "no-extend-native": "error",
+    // disallow unnecessary calls to .bind() (?)
+    "no-extra-bind": "error",
+    // Запрет на лишние labels (мы вообще labels не используем?!)
+    "no-extra-label": 0,
+    // Требование добавлять break в switch ля каждого case
+    "no-fallthrough": "error",
+    // Запрет на использование некорректных вещественных чисел, например: var num = -.7;
+    "no-floating-decimal": "error",
+    // disallow shorthand type conversions (?)
+    "no-implicit-coercion": 0,
+    // Запрещает использование неявного eval() (как строки)
+    "no-implied-eval": "error",
+    // Запрещает this вне классов. У нас ошибки на конструкцию self = this
+    "no-invalid-this": 0,
+    // Отключает использование свойства iterator
+    "no-iterator": 0,
+    // Отключает метки в коде
+    "no-labels": "error",
+    // Запрещает блоки {}, не относящиеся к циклам, функциям, или условиям
+    "no-lone-blocks": "error",
+    // Запрет использование "магических чиел", т.е. взявшихся с неба, а не из переменных, заранее определенных (в автотетсах такое сплошь и рядом => 0)
+    "no-magic-numbers": 0,
+    // Запрет большого количества пробелов
+    "no-multi-spaces": 1,
+    // Запрет использования оператора new без привязки к переменной
+    "no-new": "error",
+    // Запрет использования new для создания функций, в связи с тем, что такие функции труднее отлаживать
+    "no-new-func": "error",
+    // Запрет использования оператора new cо стандартными типами, например String, Number, Boolean
+    "no-new-wrappers": "error",
+    // Запрет восьмеричных литералов
+    "no-octal": "error",
+    // Запрет восьмеричных эск.последовательностей в строке
+    "no-octal-escape": 0,
+    // Запрет переопределения параметров функции
+    "no-param-reassign": 0,
+    // Запрет использования __proto__
+    "no-proto": 0,
+    // Запрет повторного использования var c одной и той же переменной в рамках одного блока
+    "no-redeclare": "error",
+    // Запрет присваивания javascript в url
+    "no-script-url": "error",
+    // Запрет операторов через запятую. var a=(3,5); //a=5
+    "no-sequences": "error",
+    // Запрет неиспользуемых выражений
+    "no-unused-expressions": "warn",
+    // Отключает ненужное экранирование
+    "no-useless-escape": 0,
+    // Запрет FIXME и TODO.
+    "no-warning-comments": 0,
+    // Требование оборачивать в скобки IIFE - немедленно выполняемые функторы
+    "wrap-iife": 0,
+    // Настройка отступов
+    "indent": [
+        "warn",
+        2,
+        {
+          "VariableDeclarator": {
+            // 4 для var
+            "var": 2,
+            // 4 для let
+            "let": 2,
+            // 6 для const
+            "const": 3
+          },
+          "SwitchCase": 1
+        }
+    ],
+    // Требование писать jsDoc, если объявляется функция/метод
+    "require-jsdoc": [
+      "warn",
+      {
+        "require": {
+          "FunctionDeclaration": true,
+          "MethodDefinition": true
+        }
+      }
+    ]
+  }
+}

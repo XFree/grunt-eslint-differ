@@ -1,0 +1,22 @@
+{
+  "name": "eslint-diff-formtter",
+  "version": "0.1.0",
+  "description": "eslint diff formatter",
+  "main": "eslint-diff-formatter.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=6.9.x"
+  },
+  "keywords": [
+    "eslint",
+    "formatters",
+    "diff"
+  ],
+  "author": "dmirtiy.xfree@narod.ru",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^4.11.0"
+  }
+}
