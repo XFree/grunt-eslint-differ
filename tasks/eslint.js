@@ -39,12 +39,19 @@ module.exports = (grunt) => {
 
     Promise.all([new Promise((resolve) => {
       if (isDiff) {
-        getBuildArtifact(Object.assign({artifact: outputFile}, opts.diff.teamcity))
+        const getBuildOpts = Object.assign({artifact: outputFile}, opts.diff.teamcity);
+
+        getBuildArtifact(getBuildOpts)
           .then((result) => {
             return differ(allResult, result);
           }, (err) => {
-            grunt.log.writeln(err.toString());
-            return allResult;
+            const isNotFound = err.status === 404;
+
+            if (isNotFound) {
+              grunt.log.writeln(`Master report "${getBuildOpts.artifact}" not found. This is a new version.`);
+            }
+
+            return isNotFound ? {errorCount: 0} : allResult;
           })
           .then((resultDiff) => {
             grunt.file.write(path.join(outputFilePathObj.dir, `${outputFilePathObj.name}.json`), CLIEngine.getFormatter('json')(resultDiff));
