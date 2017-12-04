@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = (grunt) => {
-  const tcArtFetcher = require('../lib/teamcity'),
+  const {getBuildArtifact} = require('../lib/teamcity'),
         differ = require('../lib/differ'),
         path = require('path');
 
@@ -18,9 +18,11 @@ module.exports = (grunt) => {
           outputFile = opts.outputFile,
           outputFilePathObj = path.parse(outputFile),
           formatter = CLIEngine.getFormatter(formatterName),
+          isDiff = opts.diff,
           done = this.async();
 
-    let report;
+    let report,
+        allResult;
 
     if (!formatter) {
       grunt.warn(`Could not find formatter ${formatterName}`);
@@ -30,44 +32,44 @@ module.exports = (grunt) => {
       report = new CLIEngine(opts).executeOnFiles(files);
     } catch (err) {
       grunt.warn(err);
-      return false;
+      done(false);
     }
 
-    Promise.all([new Promise((resolve) => {
-      if (opts.diff) {
+    allResult = report.results;
 
-        tcArtFetcher(opts.diff.teamcity)
+    Promise.all([new Promise((resolve) => {
+      if (isDiff) {
+        getBuildArtifact(Object.assign({artifact: outputFile}, opts.diff.teamcity))
           .then((result) => {
-            return differ(report.results, result);
+            return differ(allResult, result);
           }, (err) => {
-            return report.results;
+            grunt.log.writeln(err.toString());
+            return allResult;
           })
           .then((resultDiff) => {
-            grunt.file.write(path.join(outputFilePathObj.dir, outputFilePathObj.name + '.json'), CLIEngine.getFormatter('json')(resultDiff));
-            grunt.file.write(path.join(outputFilePathObj.dir, outputFilePathObj.name + '-diff' + outputFilePathObj.ext), formatter(resultDiff));
-            resolve();
+            grunt.file.write(path.join(outputFilePathObj.dir, `${outputFilePathObj.name}.json`), CLIEngine.getFormatter('json')(resultDiff));
+            grunt.file.write(path.join(outputFilePathObj.dir, `${outputFilePathObj.name}-diff${outputFilePathObj.ext}`), formatter(resultDiff));
+            resolve(resultDiff);
           });
       } else {
-        resolve();
+        resolve(allResult);
       }
     }), new Promise((resolve) => {
-      const results = formatter(report.results);
+      const results = formatter(allResult);
 
       if (outputFile) {
         grunt.file.write(outputFile, results);
       } else if (results) {
-        console.log(results);
+        grunt.log.writeln(results.toString());
       }
-      resolve();
+
+      resolve(allResult);
     })])
-      .finally(() => {
-        done(report.errorCount === 0);
+      .then((values) => {
+        done(values[0].errorCount === 0);
+      }, () => {
+        done();
       });
 
-
-    return report.errorCount === 0;
-  }
-  )
-  ;
-}
-;
+  });
+};
