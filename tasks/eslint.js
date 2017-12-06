@@ -75,7 +75,7 @@ module.exports = (grunt) => {
     })])
       .then(() => {
         if (isTeamCity){
-          grunt.log.writeln(`##teamcity[publishArtifacts '${outputFilePathObj.dir}\\*']`);
+          grunt.log.writeln(`##teamcity[publishArtifacts '${path.resolve(outputFilePathObj.dir)}\\*']`);
         }
       })
       .then((values) => {
