@@ -3,7 +3,8 @@
 module.exports = (grunt) => {
   const {getBuildArtifact} = require('../lib/teamcity'),
         differ = require('../lib/differ'),
-        path = require('path');
+        path = require('path'),
+        isTeamCity = process.env.TEAMCITY_VERSION;
 
   grunt.registerMultiTask('eslint', 'Validate files with ESLint', function () {
     const {CLIEngine} = require('eslint'),
@@ -72,6 +73,11 @@ module.exports = (grunt) => {
 
       resolve(allResult);
     })])
+      .then(() => {
+        if (isTeamCity){
+          grunt.log.writeln(`##teamcity[publishArtifacts '${outputFilePathObj.dir}\\*']`);
+        }
+      })
       .then((values) => {
         done(values[0].errorCount === 0);
       }, () => {
