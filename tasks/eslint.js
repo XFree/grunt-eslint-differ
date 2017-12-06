@@ -39,18 +39,17 @@ module.exports = (grunt) => {
     allResult = report.results;
 
     Promise.all([new Promise((resolve) => {
-      if (isDiff) {
-        const getBuildOpts = Object.assign({artifact: outputFile}, opts.diff.teamcity);
+      if (isDiff && opts.diff.teamCity) {
+        const getBuildOpts = Object.assign({artifact: outputFile}, opts.diff.teamCity);
 
         getBuildArtifact(getBuildOpts)
           .then((result) => {
             return differ(allResult, result);
           }, (err) => {
+
             const isNotFound = err.status === 404;
 
-            if (isNotFound) {
-              grunt.log.writeln(`Master report "${getBuildOpts.artifact}" not found. This is a new version.`);
-            }
+            grunt.log.writeln(isNotFound ? `Master report "${getBuildOpts.artifact}" not found. This is a new version.` : `${err.status}:${err.statusText}`);
 
             return isNotFound ? {errorCount: 0} : allResult;
           })
@@ -73,12 +72,11 @@ module.exports = (grunt) => {
 
       resolve(allResult);
     })])
-      .then(() => {
-        if (isTeamCity){
-          grunt.log.writeln(`##teamcity[publishArtifacts '${path.resolve(outputFilePathObj.dir)}\\*']`);
-        }
-      })
       .then((values) => {
+        if (isTeamCity){
+          grunt.log.writeln(`##teamcity[publishArtifacts '${path.resolve(outputFilePathObj.dir)}']`);
+        }
+
         done(values[0].errorCount === 0);
       }, () => {
         done();
