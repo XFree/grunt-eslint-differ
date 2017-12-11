@@ -21,7 +21,7 @@ module.exports = (grunt) => {
           outputFilePathObj = outputFile ? path.parse(outputFile) : null,
           formatter = CLIEngine.getFormatter(formatterName),
           jsonFormatter = CLIEngine.getFormatter('json'),
-          isDiff = opts.diff,
+          isDiff = opts.diff && outputFile && opts.diff.teamcity,
           done = this.async();
 
     let report;
@@ -39,7 +39,7 @@ module.exports = (grunt) => {
 
     new Promise((resolve) => {
 
-      if (isDiff && outputFile && opts.diff.teamcity) {
+      if (isDiff) {
         const allResultReportName = path.join(outputFilePathObj.dir, `${outputFilePathObj.name}.json`),
               getBuildOpts = Object.assign({artifact: allResultReportName}, opts.diff.teamcity);
 
@@ -62,7 +62,6 @@ module.exports = (grunt) => {
 
             grunt.file.write(allResultReportName, jsonFormatter(report));
             grunt.file.write(path.join(outputFilePathObj.dir, `${outputFilePathObj.name}-diff${outputFilePathObj.ext}`), formatter(resultDiff.results));
-            console.log(resultDiff.errorCount)
             resolve(resultDiff);
           });
       } else {
@@ -76,19 +75,22 @@ module.exports = (grunt) => {
           grunt.log.writeln(formatter(report.results).toString());
         }
 
-        if (isTeamCity) {
-          grunt.log.writeln(`##teamcity[publishArtifacts '${path.resolve(outputFilePathObj.dir)} => ${outputFilePathObj.dir}']`);
-        }
-
         if (processedReport.errorCount > 0){
-          grunt.fail.warn(`ESlint: found new errors: +${processedReport.errorCount}`);
+          grunt.log.writeln(`ESlint: found new errors: +${processedReport.errorCount}`);
         }
 
         if (processedReport.warningCount > 0){
-          grunt.fail.warn(`ESlint: found new warningCount: +${processedReport.warningCount}`);
+          grunt.log.writeln(`ESlint: found new warningCount: +${processedReport.warningCount}`);
         }
 
         grunt.log.writeln(`ESlint All: ERRORS: ${report.errorCount}, WARNINGS: ${report.warningCount}`);
+
+        if (isTeamCity) {
+          grunt.log.writeln(`##teamcity[publishArtifacts '${path.resolve(outputFilePathObj.dir)} => ${outputFilePathObj.dir}']`);
+          if (isDiff && processedReport.errorCount > 0){
+            grunt.log.writeln(`##teamcity[buildProblem description='ESlint: found new errors: +${processedReport.errorCount}']`);
+          }
+        }
 
         done(processedReport.errorCount === 0);
       }, () => {
