@@ -1,3 +1,4 @@
+/* eslint-env es6*/
 'use strict';
 
 module.exports = (grunt) => {
@@ -17,13 +18,13 @@ module.exports = (grunt) => {
           }),
           formatterName = opts.format,
           outputFile = opts.outputFile,
-          outputFilePathObj = path.parse(outputFile),
+          outputFilePathObj = outputFile ? path.parse(outputFile) : null,
           formatter = CLIEngine.getFormatter(formatterName),
+          jsonFormatter = CLIEngine.getFormatter('json'),
           isDiff = opts.diff,
           done = this.async();
 
-    let report,
-        allResult;
+    let report;
 
     if (!formatter) {
       grunt.warn(`Could not find formatter ${formatterName}`);
@@ -36,51 +37,62 @@ module.exports = (grunt) => {
       done(false);
     }
 
-    allResult = report.results;
+    new Promise((resolve) => {
 
-    Promise.all([new Promise((resolve) => {
-      if (isDiff && opts.diff.teamCity) {
-        const getBuildOpts = Object.assign({artifact: outputFile}, opts.diff.teamCity);
+      if (isDiff && outputFile && opts.diff.teamcity) {
+        const allResultReportName = path.join(outputFilePathObj.dir, `${outputFilePathObj.name}.json`),
+              getBuildOpts = Object.assign({artifact: allResultReportName}, opts.diff.teamcity);
 
         getBuildArtifact(getBuildOpts)
           .then((result) => {
-            return differ(allResult, result);
+            return result;
           }, (err) => {
-
             const isNotFound = err.status === 404;
 
-            grunt.log.writeln(isNotFound ? `Master report "${getBuildOpts.artifact}" not found. This is a new version.` : `${err.status}:${err.statusText}`);
+            if (err.status){
+              grunt.log.writeln(isNotFound ? `Master report "${getBuildOpts.artifact}" not found. This is a new version.` : `${err.status}:${err.statusText}`);
+            } else {
+              grunt.log.writeln(err.toString());
+            }
 
-            return isNotFound ? {errorCount: 0} : allResult;
+            return isNotFound ? {errorCount: 0, warningCount: 0} : report;
           })
-          .then((resultDiff) => {
-            grunt.file.write(path.join(outputFilePathObj.dir, `${outputFilePathObj.name}.json`), CLIEngine.getFormatter('json')(resultDiff));
-            grunt.file.write(path.join(outputFilePathObj.dir, `${outputFilePathObj.name}-diff${outputFilePathObj.ext}`), formatter(resultDiff));
+          .then((masterResult) => {
+            const resultDiff = differ(report, masterResult);
+
+            grunt.file.write(allResultReportName, jsonFormatter(report));
+            grunt.file.write(path.join(outputFilePathObj.dir, `${outputFilePathObj.name}-diff${outputFilePathObj.ext}`), formatter(resultDiff.results));
+            console.log(resultDiff.errorCount)
             resolve(resultDiff);
           });
       } else {
-        resolve(allResult);
+        resolve(report);
       }
-    }), new Promise((resolve) => {
-      const results = formatter(allResult);
-
-      if (outputFile) {
-        grunt.file.write(outputFile, results);
-      } else if (results) {
-        grunt.log.writeln(results.toString());
-      }
-
-      resolve(allResult);
-    })])
-      .then((values) => {
-        if (isTeamCity){
-          grunt.log.writeln(`##teamcity[publishArtifacts '${path.resolve(outputFilePathObj.dir)}']`);
+    })
+      .then((processedReport) => {
+        if (outputFile){
+          grunt.file.write(outputFile, formatter(report.results));
+        } else if (report) {
+          grunt.log.writeln(formatter(report.results).toString());
         }
 
-        done(values[0].errorCount === 0);
+        if (isTeamCity) {
+          grunt.log.writeln(`##teamcity[publishArtifacts '${path.resolve(outputFilePathObj.dir)} => ${outputFilePathObj.dir}']`);
+        }
+
+        if (processedReport.errorCount > 0){
+          grunt.fail.warn(`ESlint: found new errors: +${processedReport.errorCount}`);
+        }
+
+        if (processedReport.warningCount > 0){
+          grunt.fail.warn(`ESlint: found new warningCount: +${processedReport.warningCount}`);
+        }
+
+        grunt.log.writeln(`ESlint All: ERRORS: ${report.errorCount}, WARNINGS: ${report.warningCount}`);
+
+        done(processedReport.errorCount === 0);
       }, () => {
         done();
       });
-
   });
 };
