@@ -2,13 +2,14 @@
 'use strict';
 
 module.exports = (grunt) => {
-  const {getBuildArtifact} = require('../lib/teamcity'),
+  const {getBuildArtifact, getProperties} = require('../lib/teamcity'),
         differ = require('../lib/differ'),
-        path = require('path'),
-        isTeamCity = process.env.TEAMCITY_VERSION;
+        path = require('path');
 
   grunt.registerMultiTask('eslint', 'Validate files with ESLint', function () {
-    const {CLIEngine} = require('eslint'),
+    const teamCityProps = getProperties(),
+          isTeamCity = teamCityProps.isTeamcity,
+          {CLIEngine} = require('eslint'),
           opts = this.options({
             outputFile: false,
             diff: false
@@ -38,10 +39,15 @@ module.exports = (grunt) => {
     }
 
     new Promise((resolve) => {
-
       if (isDiff) {
         const allResultReportName = path.join(outputFilePathObj.dir, `${outputFilePathObj.name}.json`),
-              getBuildOpts = Object.assign({artifact: allResultReportName}, opts.diff.teamcity);
+              getBuildOpts = Object.assign({
+                artifact: allResultReportName,
+                buildTypeId: teamCityProps['teamcity.buildType.id'],
+                serverUrl: teamCityProps['teamcity.serverUrl'],
+                login: teamCityProps['teamcity.auth.userId'],
+                password: teamCityProps['teamcity.auth.password']
+              }, opts.diff.teamcity);
 
         getBuildArtifact(getBuildOpts)
           .then((result) => {
