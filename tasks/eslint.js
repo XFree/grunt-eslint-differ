@@ -14,9 +14,7 @@ module.exports = (grunt) => {
             outputFile: false,
             diff: false
           }),
-          files = this.filesSrc.filter((filePath) => {
-            return !filePath.includes('node_modules');
-          }),
+          files = this.filesSrc.filter((filePath) => !filePath.includes('node_modules')),
           formatterName = opts.format,
           outputFile = opts.outputFile,
           outputFilePathObj = outputFile ? path.parse(outputFile) : null,
