@@ -1,6 +1,6 @@
 # grunt-eslint-differ
 ## ESLint репортер с позможностью определения разницы в ошибках, как в Sonar
-####Интеграция с TeamCity
+#### Интеграция с TeamCity
 * для работы в режиме сравнения необходимо настроить следующие переменные окружения
     ```javascript
       module.exports = function (grunt, config) {
