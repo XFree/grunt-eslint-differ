@@ -59,10 +59,10 @@ module.exports = (grunt) => {
               grunt.log.writeln(err.toString());
             }
 
-            return isNotFound ? {errorCount: 0, warningCount: 0, results: []} : report;
+            return isNotFound ? null : report;
           })
           .then((masterResult) => {
-            const resultDiff = differ(report, masterResult);
+            const resultDiff = masterResult ? differ(report, masterResult) : {errorCount: 0, warningCount: 0, results: []};
 
             grunt.file.write(allResultReportName, jsonFormatter(report));
             grunt.file.write(path.join(outputFilePathObj.dir, `${outputFilePathObj.name}-diff${outputFilePathObj.ext}`), formatter(resultDiff.results));
