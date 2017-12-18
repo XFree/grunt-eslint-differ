@@ -59,7 +59,7 @@ module.exports = (grunt) => {
               grunt.log.writeln(err.toString());
             }
 
-            return isNotFound ? {errorCount: 0, warningCount: 0} : report;
+            return isNotFound ? {errorCount: 0, warningCount: 0, results: []} : report;
           })
           .then((masterResult) => {
             const resultDiff = differ(report, masterResult);
